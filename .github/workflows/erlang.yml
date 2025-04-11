@@ -1,5 +1,9 @@
 name: "Erlang CI"
-on: ["push", "pull_request"]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
 
 jobs:
   build:
@@ -22,3 +26,12 @@ jobs:
         make eunit
         dbus-run-session --config-file=demo/test/session.conf -- make -C demo eunit
 
+    - name: Run CT
+      run: |
+        make ct
+    - name: Upload ct logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ct_logs
+        path: logs

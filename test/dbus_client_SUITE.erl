@@ -80,6 +80,7 @@ init_per_group(connect_tcp_anonymous, Config) ->
 init_per_group(connect_unix_anonymous, Config) ->
     start_dbus(Config, ?dbus_session_unix_anonymous);
 init_per_group(connect_unix_external, Config) ->
+    application:set_env(dbus, external_cookie, system_user),
     start_dbus(Config, ?dbus_session_unix_external);
 init_per_group(_Name, Config) ->
     Config0 = start_dbus(Config, ?dbus_session_unix_external),
