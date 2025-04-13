@@ -22,6 +22,10 @@ public slots:
         return QStringList() << "Hello Tuple" << " from example-service";
     }
 
+    Q_SCRIPTABLE QStringList GetTuple(const QString &message) {
+        return QStringList() << message << " from example-service";
+    }
+
     Q_SCRIPTABLE QVariantMap GetDict() {
         QVariantMap map;
         map["first"] = "Hello Dict";
