@@ -14,7 +14,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y dbus python3-gi python3-dbus erlang
+        sudo apt-get install -y dbus python3-gi python3-dbus qtbase5-dev erlang
 
     - name: Compile
       run: |
