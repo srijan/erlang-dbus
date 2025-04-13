@@ -20,7 +20,7 @@
          find_signal/3,
          to_xml/1,
          from_xml/1,
-         from_xml_string/1
+         from_xml_string/2
         ]).
 
 -record(state, {node         :: dbus_node(),
@@ -96,14 +96,19 @@ to_xml(#dbus_node{}=Node) ->
 %%
 %% @throws {error, parse_error}
 %% @end
--spec from_xml_string(binary()) -> dbus_node().
-from_xml_string(Data) when is_binary(Data) ->
+-spec from_xml_string(binary(), binary()) -> dbus_node().
+from_xml_string(Data, RootPath) when is_binary(Data) ->
     Opts = [{event_fun, fun xml_event/3},
             {event_state, #state{}},
             skip_external_dtd],
     case xmerl_sax_parser:stream(Data, Opts) of
         {ok, #dbus_node{}=Node, _Rest} ->
-            Node;
+            case Node#dbus_node.name of
+                undefined ->
+                    Node#dbus_node{name=RootPath};
+                _ ->
+                    Node
+            end;
         {_Tag, _Location, Reason, _EndTags, _State} ->
             ?error("Error parsing introspection: ~p~n", [Reason]),
             throw({error, parse_error})
